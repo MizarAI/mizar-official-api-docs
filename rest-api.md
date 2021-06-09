@@ -35,7 +35,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 # Public Rest API for [mizar.ai](https://mizar.ai/) 
-# General API for Mizar (2021-06-07)
+# General API for Mizar (2021-06-09)
 
 * The base endpoint is: **https://api.mizar.ai/**
 * All endpoints return either a JSON object or array.
