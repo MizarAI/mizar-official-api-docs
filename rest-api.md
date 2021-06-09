@@ -58,7 +58,7 @@ These are the three sources:
 Some endpoints retrieve data from Memory and/or Database.
 
 # Endpoint security type
-* Each endpoint has a security type that determines how you will interact with it. This is stated next to teh NAME of the endpoint.
+* Each endpoint has a security type that determines how you will interact with it. This is stated next to the NAME of the endpoint.
     * If no security type is stated, assume the security type is NONE.
 * API-key are passed into the Rest API via the `mizar-api-key` header.
 * The API-key **is case-sensitive**.
