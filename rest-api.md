@@ -3,7 +3,7 @@
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [Public Rest API for mizar.ai](#public-rest-api-for-mizarai)
-- [General API for Mizar (2021-06-07)](#general-api-for-mizar-2021-06-07)
+- [General API for Mizar (2021-06-07)](#general-api-for-mizar-2021-06-10)
 - [HTTP Return Codes](#http-return-codes)
 - [Data Sources](#data-sources)
 - [Endpoint security type](#endpoint-security-type)
@@ -67,7 +67,6 @@ Security Type | Description
 ------------ | ------------
 NONE | Endpoint can be accessed freely.
 QUANT | Endpoint requires sending a valid API-Key.
-FUND | Endpoint requires sending a valid API-Key.
 
 EXCHANGES_DATA | Endpoint requires sending a valid API-Key.
 
@@ -139,10 +138,10 @@ Database
     "exchanges":
     [
         {
+            "name": "binance",
             "markets": [
-                "spot"
+                "SPOT"
             ],
-            "name": "binance"
         }
     ]
 }
@@ -151,7 +150,7 @@ Database
 ### Available markets per exchange (EXCHANGES_DATA)
 
 ```
-GET /api/v1/markets
+GET /api/v1/symbols
 ```
 
 **Weight:**
@@ -169,12 +168,13 @@ Database
 **Response:**
 ```javascript
 {
-  "markets":
+  "symbols":
   [
     {
-      "quote_asset": "USDT",
+      "symbol": "BTCUSDT",
       "base_asset": "BTC",
-      "markets": ["spot"]
+      "quote_asset": "USDT",
+      "markets": ["SPOT"]
     },
   ]
 }
@@ -534,12 +534,12 @@ Memory, Database
 }
 ```
 
-## Self-hosted fund endpoints
+## Self-hosted strategy endpoints
 
-### Publish self-hosted fund (FUND)
+### Publish self-hosted strategy (QUANT)
 
 ```
-POST /api/v1/publish-self-hosted-fund
+POST /api/v1/publish-self-hosted-strategy
 ```
 
 **Weight:**
@@ -551,7 +551,8 @@ Name | Type | Mandatory | Values(default) | Description
 ------------ | ------------ | ------------ | ------------ | ------------
 name | str | YES |   | strategy name
 exchange | string | YES |   | exchange from GET api/v1/exchanges
-markets | array | YES |   | example : ```javascript[{"quote_asset": "USDT", "base_asset": "BTC"}]```
+symbols | array | YES |   | symbols from GET api/v1/symbols
+markets | array | YES |   | markets from GET api/v1/exchanges
 
 **Data Source:**
 None
@@ -559,11 +560,11 @@ None
 **Response:**
 ```javascript
 {
-  "message": "The fund <Fund name> has been published in Mizar"
+  "message": "The strategy <strategy name> has been published in Mizar"
 }
 ```
 
-### Open position (FUND)
+### Open position (QUANT)
 
 ```
 POST /api/v1/open-position
@@ -598,7 +599,7 @@ None
 }
 ```
 
-### Close position (FUND)
+### Close position (QUANT)
 
 ```
 POST /api/v1/close-position
@@ -624,7 +625,7 @@ None
 }
 ```
 
-### Close all positions (FUND)
+### Close all positions (QUANT)
 
 ```
 POST /api/v1/close-all-positions
@@ -649,10 +650,10 @@ None
 }
 ```
 
-### Fund info (FUND)
+### Self-hosted strategy info (QUANT)
 
 ```
-GET /api/v1/funds-info
+GET /api/v1/self-hosted-strategy-info
 ```
 
 **Weight:**
@@ -681,10 +682,10 @@ Database
 }
 ```
 
-### Fund positions (FUND)
+### Self-hosted strategy positions (QUANT)
 
 ```
-GET /api/v1/hosted-fund-positions
+GET /api/v1/self-hosted-strategy-positions
 ```
 
 **Weight:**
@@ -694,7 +695,7 @@ GET /api/v1/hosted-fund-positions
 
 Name | Type | Mandatory | Values(default) | Description
 ------------ | ------------ | ------------ | ------------ | ------------
-fund_id | int | YES |    | fund_id from GET /api/v1/funds-info
+strategy_id | int | YES |    | fund_id from GET /api/v1/funds-info
 
 **Data Source:**
 Memory, Database
@@ -729,10 +730,10 @@ Memory, Database
 }
 ```
 
-### Fund live trading stats (FUND)
+### Self-hosted strategy live trading stats (QUANT)
 
 ```
-GET /api/v1/hosted-strategy-live-trading-stats
+GET /api/v1/self-hosted-strategy-live-trading-stats
 ```
 
 **Weight:**
@@ -742,7 +743,7 @@ GET /api/v1/hosted-strategy-live-trading-stats
 
 Name | Type | Mandatory | Values(default) | Description
 ------------ | ------------ | ------------ | ------------ | ------------
-fund_id | int | YES |    | id from GET /api/v1/funds-info
+strategy_id | int | YES |    | id from GET /api/v1/self-hosted-info
 
 **Data Source:**
 Memory, Database
@@ -752,7 +753,7 @@ Memory, Database
 
 ```javascript
 {
-  "fund-live-stats": {
+  "strategy-live-stats": {
       
        "USDT_BTC": 
             {   
@@ -778,10 +779,10 @@ Memory, Database
 }
 ```
 
-### Fund paper trading stats (FUND)
+### Self-hosted strategy paper trading stats (QUANT)
 
 ```
-GET /api/v1/hosted-strategy-paper-trading-stats
+GET /api/v1/self-hosted-strategy-paper-trading-stats
 ```
 
 **Weight:**
@@ -791,7 +792,7 @@ GET /api/v1/hosted-strategy-paper-trading-stats
 
 Name | Type | Mandatory | Values(default) | Description
 ------------ | ------------ | ------------ | ------------ | ------------
-fund_id | int | YES |    | id from GET /api/v1/funds-info
+fund_id | int | YES |    | id from GET /api/v1/self-hosted-info
 
 **Data Source:**
 Memory, Database
