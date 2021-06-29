@@ -18,19 +18,12 @@
     - [Bar data (EXCHANGES_DATA)](#bar-data-exchanges_data)
   - [Hosted strategies endpoints](#hosted-strategies-endpoints)
     - [Publish Strategy (QUANT)](#publish-strategy-quant)
-    - [Hosted strategy info (QUANT)](#hosted-strategy-info-quant)
-    - [Hosted strategy positions (QUANT)](#hosted-strategy-positions-quant)
-    - [Hosted strategy live trading stats (QUANT)](#hosted-strategy-live-trading-stats-quant)
-    - [Hosted strategy paper trading stats (QUANT)](#hosted-strategy-paper-trading-stats-quant)
   - [Self-hosted strategy endpoints](#self-hosted-strategy-endpoints)
     - [Publish self-hosted strategy (QUANT)](#publish-self-hosted-strategy-quant)
     - [Open position (QUANT)](#open-position-quant)
     - [Close position (QUANT)](#close-position-quant)
     - [Close all positions (QUANT)](#close-all-positions-quant)
     - [Self-hosted strategy info (QUANT)](#self-hosted-strategy-info-quant)
-    - [Self-hosted strategy positions (QUANT)](#self-hosted-strategy-positions-quant)
-    - [Self-hosted strategy live trading stats (QUANT)](#self-hosted-strategy-live-trading-stats-quant)
-    - [Self-hosted strategy paper trading stats (QUANT)](#self-hosted-strategy-paper-trading-stats-quant)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -342,11 +335,11 @@ stop_loss_tick_level | bool | YES | whether the stop loss is triggered byt ticks
 ```javascript
 {
     "strategy_signal_name": "My strategy",
+    "creation_timestamp": 1624963458234
     "target_data_source": "btc_usd_1d",
     "num_expiration_bars": 20,
     "data_sources": {
         "btc_usd_1d": {
-              "data_type": "bar", 
               "quote_asset": "USDT",
               "base_asset": "BTC",
               "exchange": "binance",
@@ -371,169 +364,6 @@ None
 }
 ```
 
-### Hosted strategy info (QUANT)
-
-```
-GET /api/v1/hosted-strategies-info
-```
-
-**Weight:**
-1
-
-**Parameters:**
-
-Name | Type | Mandatory | Values(default) | Description
------------- | ------------ | ------------ | ------------ | ------------
-base_asset | str | NO |    | base_asset from GET /v1/base-assets
-quote_asset | str | NO |    | quote_asset from GET /v1/quote-assets
-bar_type | str | NO |    | bar_type from GET /v1/bar-types
-bar_subclass | str | NO |    | bar_subclass from GET /v1/bar-types
-exchange | string | YES |   | exchange from GET /v1/exchanges
-
-**Data Source:**
-Database
-
-**Response:**
-```javascript
-{
-  "hosted_strategies":
-  [
-    {
-      "name": "My strategy",
-      "version": 0,
-      "is_valid": true,
-      "is_public": true,
-      "is_backtested": true,
-      "active_subscribers": 1000,
-      "profit_fee": 0.1,
-      "published_timestamp": 11111111111,
-    },
-  ]
-}
-```
-
-### Hosted strategy positions (QUANT)
-
-```
-GET /api/v1/hosted-strategy-positions
-```
-
-**Weight:**
-1
-
-**Parameters:**
-
-Name | Type | Mandatory | Values(default) | Description
------------- | ------------ | ------------ | ------------ | ------------
-name | str | YES |    | name from GET api/v1/hosted-strategies-info
-version | int | YES |    | version from GET api/v1/hosted-strategies-info
-
-**Data Source:**
-Memory, Database
-
-**Response:**
-```javascript
-{
-  "positions": [
-    {   
-        "is_closed": true,
-        "open_timestamp": 1623081868169,
-        "closed_timestamp": 1623081968169,
-        "open_price": 30000,
-        "close_price": 100000,
-        "size": 1.0,
-        "is_long": true,
-        "expiration_bar": false,
-        "profit_taking_bar": true,
-        "stop_loss_bar": false,
-        "rule": false,
-        "profit_taking_value": 100000,
-        "stop_loss_value": 77771
-    },
-  ]
-}
-```
-
-### Hosted strategy live trading stats (QUANT)
-```
-GET /api/v1/hosted-strategy-live-trading-stats
-```
-
-**Weight:**
-1
-
-**Parameters:**
-
-Name | Type | Mandatory | Values(default) | Description
------------- | ------------ | ------------ | ------------ | ------------
-name | str | YES |    | name from GET api/v1/hosted-strategies-info
-version | int | YES |    | version from GET api/v1/hosted-strategies-info
-
-**Data Source:**
-Memory, Database
-
-**Response:**
-```javascript
-{
-  "strategy-live-stats": {
-      "active_subscribers": 1000,
-      "aum_quote": 100,
-      "aum_base": 100,
-      "avg_returns_per_trade": 0.05, 
-      "best_won_quote": 0.10,
-      "worst_loss_quote": -0.10,
-      "best_won_base": 0.10,
-      "worst_loss_base": 0.10, 
-      "total_traded_volume_quote": 100,
-      "total_traded_volume_base": 100,
-      "current_month_traded_volume_quote": 50,
-      "current_month_traded_volume_base": 50,
-      "current_month_pnl_quote": 2,
-      "current_month_pnl_base": 1.5,
-      "total_shared_profits": 100,
-      "current_month_estiamted_shared_profits": 1000 
-    }
-}
-```
-
-### Hosted strategy paper trading stats (QUANT)
-
-```
-GET /api/v1/hosted-strategy-paper-trading-stats
-```
-
-**Weight:**
-1
-
-**Parameters:**
-
-Name | Type | Mandatory | Values(default) | Description
------------- | ------------ | ------------ | ------------ | ------------
-name | str | YES |    | name from GET api/v1/hosted-strategies-info
-version | int | YES |    | version from GET api/v1/hosted-strategies-info
-
-**Data Source:**
-Memory, Database
-
-**Response:**
-```javascript
-{
-  "strategy-paper-stats": {
-      "total_n_trades": 100,
-      "average_trade_per_week": 20,
-      "avg_returns_per_trade": 0.05, 
-      "best_won_quote": 0.10,
-      "worst_loss_quote": -0.10,
-      "best_won_base": 0.10
-      "worst_loss_base": 0.10,
-      "total_returns_quote": 0.2,
-      "total_returns_base": 0.1,
-      "current_month_returns_quote": 0.1,
-      "current_month_returns_base": 0.05
-    }
-}
-```
-
 ## Self-hosted strategy endpoints
 
 ### Publish self-hosted strategy (QUANT)
@@ -550,6 +380,7 @@ POST /api/v1/publish-self-hosted-strategy
 Name | Type | Mandatory | Values(default) | Description
 ------------ | ------------ | ------------ | ------------ | ------------
 name | str | YES |   | strategy name
+description | str | YES |   |
 exchange | string | YES |   | exchange from GET api/v1/exchanges
 symbols | array | YES |   | symbols from GET api/v1/symbols
 markets | array | YES |   | markets from GET api/v1/exchanges
@@ -560,7 +391,17 @@ None
 **Response:**
 ```javascript
 {
-  "message": "The strategy <strategy name> has been published in Mizar"
+  "strategy_id": 1,
+  "creation_timestamp": 1624963458234,
+  "market": "SPOT",
+  "name": "strategy_name",
+  "symbols": [
+      {
+          "base_asset": "BTC",
+          "quote_asset": "USDT",
+          "symbol": "BTCUSDT"
+      }
+  ]
 }
 ```
 
@@ -580,12 +421,7 @@ Name | Type | Mandatory | Values(default) | Description
 base_asset | str | YES |   |
 quote_asset | str | YES |   |
 size | float | NO | 1.0 | the size of the position relative to the max size set by the user
-is_long | bool | YES |    |  
-stop_loss | float | NO |    | stop loss from opening price
-take_profit | float | NO |    | take profit from opening price
-trailing_stop_loss_deviation | float | NO |    | 
-trailing_take_profit_deviation | float | NO |    |
-expiration_time | int | NO |    | number of seconds before expiration
+is_long | bool | YES |    |
 
 **Data Source:**
 None
@@ -594,8 +430,14 @@ None
 
 ```javascript
 {
-  "message": "The position has been successfully open"
-  "position_id" : 777
+  "strategy_id": '1',
+  "position_id": '1',
+  "open_timestamp": 1624963458234,
+  "open_price": '35574.320000000000',
+  "base_asset": "BTC", 
+  "quote_asset": "USDT",  
+  "size": 1
+  "is_long": true
 }
 ```
 
@@ -621,7 +463,16 @@ None
 
 ```javascript
 {
-  "message": "The position <position_id> has been successfully closed"
+  "strategy_id": '1',
+  "position_id": '1',
+  "open_timestamp": 1624963458234,
+  "open_price": '35574.320000000000',
+  "close_timestamp": 1624965243823, 
+  "close_price":'35569.990000000000',
+  "base_asset": "BTC",
+  "quote_asset": "USDT",
+  "size": 1,
+  "is_long": true
 }
 ```
 
@@ -638,7 +489,7 @@ POST /api/v1/close-all-positions
 
 Name | Type | Mandatory | Values(default) | Description
 ------------ | ------------ | ------------ | ------------ | ------------
-fund_id | int | NO |   |   | fund_id from GET /api/v1/funds-info if not specified all the positions for all the fund will be closed
+strategy_id | int | NO |   |   | strategy_id from GET /api/v1/strategies-info
 
 **Data Source:**
 None
@@ -646,8 +497,45 @@ None
 **Response:**
 ```javascript
 {
-  "message": "The position <position_id> has been successfully closed"
+  'closed_positions':
+  [{
+    'base_asset': 'BTC',
+    'close_price': '35502.500000000000',
+    'close_timestamp': 1624965526348,
+    'is_long': True,
+    'open_price': '35502.500000000000',
+    'open_timestamp': 1624965517100,
+    'position_id': '2',
+    'quote_asset': 'USDT',
+    'size': 1.0,
+    'strategy_id': '1'
+  },
+    {
+      'base_asset': 'BTC',
+      'close_price': '35502.500000000000',
+      'close_timestamp': 1624965526420,
+      'is_long': True,
+      'open_price': '35502.500000000000',
+      'open_timestamp': 1624965518167,
+      'position_id': '3',
+      'quote_asset': 'USDT',
+      'size': 1.0,
+      'strategy_id': '1'
+    },
+    {
+      'base_asset': 'BTC',
+      'close_price': '35502.500000000000',
+      'close_timestamp': 1624965526440,
+      'is_long': True,
+      'open_price': '35502.500000000000',
+      'open_timestamp': 1624965519715,
+      'position_id': '4',
+      'quote_asset': 'USDT',
+      'size': 1.0,
+      'strategy_id': '1'
+    }]
 }
+
 ```
 
 ### Self-hosted strategy info (QUANT)
@@ -669,152 +557,22 @@ Database
 **Response:**
 ```javascript
 {
-  "self_hosted_funds":
-  [
-    {
-      "id": 1,
-      "name": "My fund",
-      "active_subscribers": 1000,
-      "profit_fee": 0.1,
-      "published_timestamp": 1623081868169,
-    },
-  ]
-}
-```
-
-### Self-hosted strategy positions (QUANT)
-
-```
-GET /api/v1/self-hosted-strategy-positions
-```
-
-**Weight:**
-1
-
-**Parameters:**
-
-Name | Type | Mandatory | Values(default) | Description
------------- | ------------ | ------------ | ------------ | ------------
-strategy_id | int | YES |    | fund_id from GET /api/v1/funds-info
-
-**Data Source:**
-Memory, Database
-
-**Response:**
-
-```javascript
-{
-  "positions": [
-    {   
-        "base_asset": "BTC",
-        "quote_asset": "USDT",
-        "is_closed": true,
-        "open_timestamp": 1623081868169,
-        "closed_timestamp": 1623081868169,
-        "avg_open_price": 77777,
-        "avg_close_price": 100000,
-        "min_open_price": 77777,
-        "min_close_price": 100000,
-        "max_open_price": 77777,
-        "max_close_price": 100000,
-        "size": 1.0,
-        "is_long": true,
-        "expiration_bar": false,
-        "profit_taking_bar": true,
-        "stop_loss_bar": false,
-        "rule": false,
-        "profit_taking_value": 100000,
-        "stop_loss_value": 77771
-    },
-  ]
-}
-```
-
-### Self-hosted strategy live trading stats (QUANT)
-
-```
-GET /api/v1/self-hosted-strategy-live-trading-stats
-```
-
-**Weight:**
-1
-
-**Parameters:**
-
-Name | Type | Mandatory | Values(default) | Description
------------- | ------------ | ------------ | ------------ | ------------
-strategy_id | int | YES |    | id from GET /api/v1/self-hosted-info
-
-**Data Source:**
-Memory, Database
-
-**Response:**
-
-
-```javascript
-{
-  "strategy-live-stats": {
-      
-       "USDT_BTC": 
-            {   
-                "timestamp": 1623081868169, 
-                "active_subscribers": 1000,
-                "aum_quote": 100,
-                "aum_base": 100,
-                "avg_returns_per_trade": 0.05,
-                "best_won_quote": 0.10,
-                "worst_loss_quote": -0.10,
-                "best_won_base": 0.10,
-                "worst_loss_base": 0.10,
-                "total_traded_volume_quote": 100,
-                "total_traded_volume_base": 100,
-                "current_month_traded_volume_quote": 50,
-                "current_month_traded_volume_base": 50,
-                "current_month_pnl_quote": 2,
-                "current_month_pnl_base": 1.5,
-                "total_shared_profits": 100,
-                "current_month_estiamted_shared_profits": 1000
-            },
-  }
-}
-```
-
-### Self-hosted strategy paper trading stats (QUANT)
-
-```
-GET /api/v1/self-hosted-strategy-paper-trading-stats
-```
-
-**Weight:**
-1
-
-**Parameters:**
-
-Name | Type | Mandatory | Values(default) | Description
------------- | ------------ | ------------ | ------------ | ------------
-fund_id | int | YES |    | id from GET /api/v1/self-hosted-info
-
-**Data Source:**
-Memory, Database
-
-**Response:**
-
-```javascript
-{
-  "strategy-paper-stats": {
-    "USDT_BTC": {
-            "total_n_trades": 100, 
-            "average_trade_per_week": 20,
-            "avg_returns_per_trade": 0.05,
-            "best_won_quote": 0.10,
-            "worst_loss_quote": -0.10,
-            "best_won_base": 0.10, 
-            "worst_loss_base": 0.10,
-            "total_traded_volume_quote": 100,
-            "total_traded_volume_base": 100,
-            "current_month_returns_quote": 0.1,
-            "current_month_returns_base": 0.05
+  "strategies":
+    [
+      {
+        "strategy_id": 1,
+        "creation_timestamp": 
+        "name": "My strategy",
+        "exchange": "binance",
+        "market": "SPOT",
+        "symbols": [
+      {
+          "symbol": "BTCUSDT",
+          "base_asset": "BTC",
+          "quote_asset": "USDT"
+      }
+    ]
     }
-  }
+  ]
 }
 ```
