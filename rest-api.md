@@ -418,6 +418,7 @@ POST /api/v1/open-position
 
 Name | Type | Mandatory | Values(default) | Description
 ------------ | ------------ | ------------ | ------------ | ------------
+strategy_id | id | YES |   |
 base_asset | str | YES |   |
 quote_asset | str | YES |   |
 size | float | NO | 1.0 | the size of the position relative to the max size set by the user
@@ -566,12 +567,12 @@ Database
         "exchange": "binance",
         "market": "SPOT",
         "symbols": [
-      {
-          "symbol": "BTCUSDT",
-          "base_asset": "BTC",
-          "quote_asset": "USDT"
-      }
-    ]
+          {
+              "symbol": "BTCUSDT",
+              "base_asset": "BTC",
+              "quote_asset": "USDT"
+          }
+        ]
     }
   ]
 }
